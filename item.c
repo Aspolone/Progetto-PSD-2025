@@ -12,7 +12,7 @@ Utente* creaUtente(char* nome) {
         exit(1);
     }
 
-    nuovoUtente->ID_utente = 1; //TODO serve un diverso metodo per ID, magari lo riceve dal main
+    nuovoUtente->ID_utente = 1; // serve un diverso metodo per ID, magari lo riceve dal main
 
     // allocazione memoria per il nuovo nome
     nuovoUtente->nome = malloc(strlen(nome) + 1);
