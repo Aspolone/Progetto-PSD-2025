@@ -10,7 +10,7 @@ typedef struct prenotazione Prenotazione;
 struct utente {
     char codiceFiscale[16 + 1];
     char* nome;
-    int nPrenotazioni;
+    int nPrenotazioni; //aggiunta inizio e fine ora
     Prenotazione** prenotazioni;  // Array di puntatori a prenotazioni
 };
 
@@ -35,18 +35,22 @@ struct prenotazione {
 // Prototipi delle funzioni
 Utente* creaUtente(char* , char*);
 Prenotazione* creaPrenotazione(Utente*, Veicolo*, int, int);
-Veicolo* creaVeicolo(char*, char*); //da fare
+
+//crea veicolo e temporanea
+Veicolo* creaVeicolo(char*, char*);
 
 bool checkValidita(Prenotazione*);
+void stampaValidita(Veicolo* veicolo);
 float calcolaCosto(Prenotazione *);
 float applicaSconto(Prenotazione*, float);
 
-//FILE creaFile(char*); sia per crea che chiudi forse non serve poiché già esistenti
-//FILE chiudiFile(FILE*);
+//void stampaValidita(Veicolo*);
+//void stampaPrenotazione(Prenotazione*);
+
 void aggiungiStorico(FILE*, Prenotazione*); //da chiamare ogni volta che si aggiunge un nodo alla lista [magari data]
 //aggiungere funzioni di caricaDaFile.
 
 void getNome(Utente* utente);
 void liberaUtente(Utente* utente);
-void liberaVeicolo(Veicolo* veicolo); //da fare
-void liberaPrenotazione(Prenotazione* prenotazione); //da fare
+void liberaVeicolo(Veicolo* veicolo);
+void liberaPrenotazione(Prenotazione* prenotazione);

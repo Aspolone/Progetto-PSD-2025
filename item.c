@@ -44,28 +44,44 @@ Utente* creaUtente(char* nome, char* CF) {
     return nuovoUtente;
 }
 
-Veicolo* creaVeicolo() {
+Veicolo* creaVeicolo(char* targa, char* modello) {
 
+    Veicolo* nuovoVeicolo = malloc(sizeof(Veicolo));
+    if (nuovoVeicolo == NULL) {
+        printf("Errore allocazione veicolo.\n");
+        exit(1);
+    }
+
+    strcpy(nuovoVeicolo->targa, targa);
+
+    nuovoVeicolo->modello = malloc (sizeof(strlen(modello) + 1));
+
+    for (int i = 0 ; i < 24; i++)
+        nuovoVeicolo->data[i] = false; //imposta il vettore tutto a falso
+
+    return nuovoVeicolo;
 }
 
 
-//creare funzione che crei una prenotazione, prendendo in input utente e il veicolo
-//prenot (il parametro) deve essere completato quindi la funzione consList deve essere chiamata da crea prenotazione (a mio parere)
-
 bool checkValidita(Prenotazione* prenot) {
-    if (prenot->veicolo->data[prenot->inizio_data]) {
-        //controlla se il veicolo è occupato in data inizio
-        return false;
-    } else {
-        for (int i = prenot->inizio_data; i < (prenot->fine_data -prenot->inizio_data); i++)
-            prenot->veicolo->data[i] = true;// se false (validita disponibile) allora imposta validitá a true , occupando il veicolo
-        return true; //ritorna TRUE poiché il check é andato a buon fine
-    } //l'unico vincolo è che le prenotazioni sono minimo 1h
+    for (int i = prenot->inizio_data; i < prenot->fine_data; i++) {
+        if (prenot->veicolo->data[i]) {
+            return false; // già occupato
+        }
+    }
+    return true; // tutto libero
+}
+
+void stampaValidita(Veicolo* veicolo) {
+    for (int i = 0; i < 24; i++)
+        printf("| %c ", veicolo->data[i] ? 'x' : 'o'); //in base al valore bool stampa x or o
+
+    printf("|\n"); //per abbellire e chiudere il "box"
 }
 
 float calcolaCosto (Prenotazione* prenot) {
     float costo = (float)(prenot->fine_data - prenot->inizio_data) * TARIFFA;
-    applicaSconto(prenot, costo);
+    costo = applicaSconto(prenot, costo);
 
     return costo;
 }
@@ -98,9 +114,12 @@ Prenotazione* creaPrenotazione(Utente* u, Veicolo* v, int i_data, int f_data) {
         exit(1);
     } else nuovaPrenotazione->inizio_data = i_data; nuovaPrenotazione->fine_data = f_data;
 
-    if (!checkValidita(nuovaPrenotazione)) { //verifica validita' del veicolo
+    if (!checkValidita(nuovaPrenotazione)) {
         printf("Errore di prenotazione, orario occupato.");
         exit(1);
+    } else {
+        for (int i = nuovaPrenotazione->inizio_data; i < nuovaPrenotazione->fine_data; i++)
+            nuovaPrenotazione->veicolo->data[i] = true;
     }
 
     nuovaPrenotazione->costo = calcolaCosto(nuovaPrenotazione);
@@ -136,4 +155,14 @@ void liberaUtente(Utente* utente) {
 
     for (int i = 0; i < MAX_PRENOTAZIONI; i++)
         free(utente->prenotazioni[i]); //libera la memoria allocata al vettore di prenotazioni
+}
+
+void liberaVeicolo(Veicolo* veicolo) {
+    free(veicolo->modello);
+}
+
+void liberaPrenotazione(Prenotazione* prenotazione) {
+    liberaUtente(prenotazione->utente);
+    liberaVeicolo(prenotazione->veicolo);
+
 }
