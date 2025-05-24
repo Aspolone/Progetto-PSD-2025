@@ -45,7 +45,7 @@ Prenotazione* getFirst(list l) {
 
 void stampaLista(list l) {
   list temp = l;
-  while (!isEmptyList(temp)) { //todo aggiungere contatore per numero prenot (giusto per abbellire la stampa)
+  while (!isEmptyList(temp)) {
     Prenotazione* p = getFirst(temp);
     printf("Prenotazione: Utente %s, Veicolo %s, Inizio %d, Fine %d\n",
            p->utente->nome,

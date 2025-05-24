@@ -8,7 +8,6 @@
 
 #define MAX_VEICOLI 100
 
-//todo commentare tutto
 
 int main() {
     int numVeicoli;
