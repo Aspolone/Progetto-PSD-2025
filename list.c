@@ -1,19 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#inlcude "item.h" forsce non abbiamo bisogno di includerla essendo gia inclusa in list.h
 #include "list.h"
 
 list newList(void){
   return NULL;
 }
 
-int emptyList(list l){
+int isEmptyList(list l){
   return l == NULL;
   }
 
-//aggiungere alla funzione check validitá e solo se é true procede con l'aggiunta del nodo, sennó annulla
-//questa funzione verrá chiamata nel main da uno switch case (vorrei cercare un modo per rendere l'interfaccia scorrevole
-//fatto sta che prima di essa vi sará chiamata aggPrenot();
+
 list consList(Prenotazione* prenot, list l) {
 
   struct node *nuova_prenotazione = malloc(sizeof(struct node));
@@ -44,4 +41,29 @@ Prenotazione* getFirst(list l) {
   else
     e = NULLITEM;
   return e;
+}
+
+void stampaLista(list l) {
+  list temp = l;
+  while (!isEmptyList(temp)) { //todo aggiungere contatore per numero prenot (giusto per abbellire la stampa)
+    Prenotazione* p = getFirst(temp);
+    printf("Prenotazione: Utente %s, Veicolo %s, Inizio %d, Fine %d\n",
+           p->utente->nome,
+           p->veicolo->targa,
+           p->inizio_data,
+           p->fine_data);
+    temp = tailList(temp);
+  }
+}
+
+list freeList(list l) {
+  while (!isEmptyList(l)) {
+    Prenotazione* p = getFirst(l);
+    liberaPrenotazione(p);
+
+    list temp = l;
+    l = tailList(l);
+    free(temp);
+  }
+  return NULL;
 }
