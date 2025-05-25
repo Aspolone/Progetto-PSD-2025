@@ -3,26 +3,27 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
+typedef struct prenotazione* Prenotazione;
+typedef struct utente* Utente;
 
 #define UTENTE_MAX_NOME 50
 #define CF_MAX 17
 #define MAX_PRENOTAZIONI 10
 
-typedef struct prenotazione Prenotazione; //servendomi solo
-typedef struct utente Utente;
 
-// Struttura Utente
-struct utente {
-    char codiceFiscale[16 + 1];
-    char* nome;
-    int nPrenotazioni; //aggiunta inizio e fine ora
-    Prenotazione** prenotazioni;  // Array di puntatori a prenotazioni
-};
+//Prototipi
+Utente creaUtente(char* , char*);
 
-Utente* creaUtente(char* , char*);
-void getNome(Utente* utente);
-void liberaUtente(Utente* utente);
+void aggPrenot(Utente, Prenotazione);
+char* getNome(Utente);
+char* getCF(Utente);
+int getNPrenot(Utente);
+void setNPrenot(Utente, int);
+Prenotazione getPrenot(Utente, int);
+void setPrenot(Utente, int, Prenotazione);
+
+
+void liberaUtente(Utente);
 
 #endif // UTENTE_H

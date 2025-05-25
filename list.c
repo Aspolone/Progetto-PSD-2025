@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include "list.h"
 
+#include <string.h>
+
+struct node {
+  Prenotazione prenotazione; //Prenotazione é un puntatore per gestire meglio la memoria
+  struct node *next;
+};
+
 list newList(void){
   return NULL;
 }
@@ -11,7 +18,7 @@ int isEmptyList(list l){
   }
 
 
-list consList(Prenotazione* prenot, list l) {
+list consList(Prenotazione prenot, list l) {
 
   struct node *nuova_prenotazione = malloc(sizeof(struct node));
 
@@ -34,8 +41,8 @@ list tailList(list l) {
 }
 
 //non avendo messo in dichiarazione di struct *, adesso andra' messo un po' ovunque
-Prenotazione* getFirst(list l) {
-  Prenotazione* e;
+Prenotazione getFirst(list l) {
+  Prenotazione e;
   if (l != NULL)
     e = l->prenotazione;
   else
@@ -46,19 +53,75 @@ Prenotazione* getFirst(list l) {
 void stampaLista(list l) {
   list temp = l;
   while (!isEmptyList(temp)) {
-    Prenotazione* p = getFirst(temp);
-    printf("Prenotazione: Utente %s, Veicolo %s, Inizio %d, Fine %d\n",
-           p->utente->nome,
-           p->veicolo->targa,
-           p->inizio_data,
-           p->fine_data);
+    Prenotazione p = getFirst(temp);
+    printf("\nUtente: %s, Veicolo: %s, Orario: %2d %2d, Prezzo: %.2f\n",
+           getNome(getUtente(p)),
+           getTarga(getVeicolo(p)),
+           getInizio(p),
+           getFine(p),
+           getCosto(p));
+
     temp = tailList(temp);
   }
 }
 
+bool stampaListaSecondoUtente(list l, char* nome) {
+  list temp = l;
+  bool trovato = false;
+  int i = 1;
+
+  while (temp != NULL) {
+    Prenotazione p = getFirst(temp);
+
+    if (strcmp(getNome(getUtente(p)), nome) == 0) {
+      trovato = true;
+      printf("\n%d) ID: %d, Veicolo: %s, Orario: %d %d, Prezzo: %.2f\n",
+             i,
+             getID(p),
+             getTarga(getVeicolo(p)),
+             getInizio(p),
+             getFine(p),
+             getCosto(p));
+      i++;
+    }
+
+    temp = tailList(temp);
+  }
+
+  return trovato;
+}
+
+bool eliminaPrenot(list *l, int ID) {
+  list temp = *l; //copia lista su una lista temp, temp è corrente adesso
+  list nodoPrec = NULL; //creo il nodo precedente e lo imposto null
+
+  while (temp != NULL) { // scorre tutta la lista
+    if (getID(temp->prenotazione) == ID) {// controlla se l'ID e lo stesso di quello inserito
+      //quello trovato sara quello che verra eliminato
+
+      if (nodoPrec != NULL) {// se il nodo precedente NON e vuoto, non stiamo eliminando il primo elemnto
+        // quindi nodo deve saltare al next di temp, puntando al prossimo
+        nodoPrec->next = temp->next;//
+      } else {
+        // se nodoPrec = NULL, allora stiamo eliminando il primo elemnto, quindi l (la cima della lista) dovrá solamente saltare oltre temp
+        *l = temp->next;
+      }
+
+      liberaPrenotazione(temp->prenotazione); // qui liberiamo la value di temp
+      free(temp);// liberiamo il nodo vero e proprio
+      return true;
+    }
+
+    nodoPrec = temp;// se non ha ancora torvato il nodo da eliminare, inizia a scorrere la lista
+    temp = temp->next;// scorrendo nodoPrec e temp in avanti
+  }
+
+  return false; // Non trovato
+}
+
 list freeList(list l) {
   while (!isEmptyList(l)) {
-    Prenotazione* p = getFirst(l);
+    Prenotazione p = getFirst(l);
     liberaPrenotazione(p);
 
     list temp = l;

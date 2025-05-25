@@ -4,19 +4,18 @@
 #include "prenotazione.h"
 
 #define NULLITEM 0
+
 typedef struct node* list;
 
-struct node {
-  Prenotazione* prenotazione; //Prenotazione é un puntatore per gestire meglio la memoria
-  struct node *next;
-};
-
+//prototipi
 list newList(void);
 int isEmptyList(list );
 list tailList(list );
-list consList(Prenotazione* , list );
-Prenotazione* getFirst(list );
+list consList(Prenotazione , list );
+Prenotazione getFirst(list );
 void stampaLista(list l);
+bool stampaListaSecondoUtente(list , char*);
 list freeList(list l);
+bool eliminaPrenot(list* , int);
 
 #endif // LIST_H

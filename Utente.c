@@ -1,10 +1,18 @@
-#include "Utente.h"
+#include "utente.h"
 #include "Prenotazione.h"
+#include <stdlib.h>
+#include <string.h>
 
+struct utente {
+    char codiceFiscale[16 + 1];
+    char* nome;
+    int nPrenotazioni; //aggiunta inizio e fine ora
+    Prenotazione* prenotazioni;  // Array di puntatori a prenotazioni
+};
 
 //adesso riceve input come parametri, successivamente andra' cambiato
-Utente* creaUtente(char* nome, char* CF) {
-    Utente* nuovoUtente = malloc(sizeof(Utente));  // allocazione memoria ad utente
+Utente creaUtente(char* nome, char* CF) {
+    Utente nuovoUtente = malloc(sizeof(struct utente));  // allocazione memoria ad utente
     if (nuovoUtente == NULL) {
         printf("Errore allocazione utente.\n");
         exit(1);
@@ -40,12 +48,36 @@ Utente* creaUtente(char* nome, char* CF) {
     return nuovoUtente;
 }
 
-
-void getNome(Utente* utente) {
-    printf("Ecco il nome: %s\n", utente->nome);
+int getNPrenot (Utente utente) {
+    return utente->nPrenotazioni;
 }
 
-void liberaUtente(Utente* utente) {
+void setNPrenot (Utente utente, int n) {
+    utente->prenotazioni += n;
+}
+
+char* getNome(Utente utente) {
+    return utente->nome;
+}
+
+char* getCF(Utente utente) {
+    return utente->codiceFiscale;
+}
+
+Prenotazione getPrenot(Utente utente, int nPrenot) {
+    return utente->prenotazioni[nPrenot];
+}
+
+void setPrenot(Utente utente, int nPrenot, Prenotazione p) {
+    utente->prenotazioni[nPrenot] = p;
+}
+
+void aggPrenot(Utente utente, Prenotazione p) {
+    utente->prenotazioni[utente->nPrenotazioni] = p;
+    utente->nPrenotazioni++;
+}
+
+void liberaUtente(Utente utente) {
     if (utente == NULL) return;
 
     free(utente->nome);

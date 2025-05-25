@@ -6,7 +6,8 @@
 #include "Utente.h"
 #include "Veicolo.h"
 
-#define MAX_VEICOLI 100
+#define MAX_VEICOLI 50
+#define TARIFFA 8.0f
 
 
 int main() {
@@ -19,14 +20,14 @@ int main() {
         exit(1);
     }
 
-    Veicolo** listaVeicoli = caricaVeicoliDaFile("veicoli.txt", &numVeicoli);
+    Veicolo* listaVeicoli = caricaVeicoliDaFile("veicoli.txt", &numVeicoli);
 
     if(numVeicoli == 0) {
         printf("Nessun veicolo caricato.\n");
         return 1;
     }
 
-    Utente* utente = NULL;
+    Utente utente = NULL;
     list listaPrenotazioni = newList();
 
     FILE* fileStorico = fopen("storico.txt", "a");
@@ -41,12 +42,18 @@ int main() {
         printf("\n--- MENU ---\n");
         printf("1) Crea utente\n");
         printf("2) Prenota veicolo\n");
-        printf("3) Visualizza veicoli'\n");
+        printf("3) Visualizza veicoli\n");
         printf("4) Visualizza prenotazioni\n");
+        printf("5) Elimina prenotazione\n");
+        printf("6) Stampa storico\n");
         printf("0) Esci\n");
         printf("Scelta: ");
-        scanf("%d", &scelta);
-        getchar(); // pulisci \n
+
+        int inputCheck = 0;
+        do{
+            inputCheck = scanf("%d", &scelta); //perche la scanf ritorna il numero di valori assegnati ad una variabile
+            getchar(); //pulisce l'input
+        }while(!inputCheck); // se si inserisce una stringa, non trova l'intero, essendo lo specificatore %d. Quindi la scanf(); restituisce 0, facendo ripetere l'input.
 
         switch(scelta) {
             case 1: {
@@ -72,9 +79,10 @@ int main() {
                     printf("Prima crea un utente!\n"); //
                     break;
                 }
+                printf("\n[=== TARIFFA FISSA DI: %.2f$/h ===]\n", TARIFFA);
                 printf("Veicoli disponibili:\n");
                 for(int i=0; i<numVeicoli; i++) {
-                    printf("%d) %s - %s\n", i+1, listaVeicoli[i]->targa, listaVeicoli[i]->modello);
+                    printf("%d) %s - %s\n", i+1, getTarga(listaVeicoli[i]), getModello(listaVeicoli[i]));
                 }
                 int sceltaVeicolo;
                 printf("Scegli veicolo (numero): "); //scelta in base ai veicoli dentro il file
@@ -84,14 +92,15 @@ int main() {
                     break;
                 }
                 int inizio, fine;
+                printf("\n[=== Prezzo ridotto del 10%% dalle 22 alle 06 ===]\n", TARIFFA);
                 printf("Inserisci ora inizio e fine (0-23): ");
                 scanf("%d %d", &inizio, &fine);
-                if(inizio < 0 || fine > 24 || inizio >= fine) {
+                if(inizio < 0 || fine > 24) {
                     printf("Orari non validi.\n");
                     break;
                 }
 
-                Prenotazione* p = creaPrenotazione(utente, listaVeicoli[sceltaVeicolo - 1], inizio, fine);
+                Prenotazione p = creaPrenotazione(utente, listaVeicoli[sceltaVeicolo - 1], inizio, fine);
                 if (p == NULL) {
                     printf("Prenotazione fallita, riprova con orari diversi.\n");
                     break;
@@ -99,15 +108,15 @@ int main() {
                 listaPrenotazioni = consList(p, listaPrenotazioni);
                 aggiungiStorico(fileStorico, p);
                 printf("Prenotazione effettuata.\n");
+                controllaSconto(p);
                 break;
                 }
             }
             case 3: {
                 if(isEmptyList(listaPrenotazioni)) {
                     printf("Tutti i veicoli sono liberi.\n");
-                } else {
+                } else
                     stampaVeicoli(numVeicoli, listaVeicoli);
-                }
                 break;
             }
             case 4: {
@@ -115,9 +124,38 @@ int main() {
                     printf("Nessuna prenotazione.\n");
                 } else {
                     printf("Prenotazioni:\n");
-                    stampaLista(listaPrenotazioni);
+                    stampaLista(listaPrenotazioni);//stampa tutte le prenotazioni
                 }
                 break;
+            }
+            case 5: {
+                if (isEmptyList(listaPrenotazioni)) {
+                    printf("Nessuna prenotazione.\n");
+                } else {
+                    if (!stampaListaSecondoUtente(listaPrenotazioni, getNome(utente))) {
+                        printf("Nessuna prenotazione per questo utente.\n");
+                        break;
+                    }
+                    printf("Inserisci ID prenotazione da voler eliminare (-1 per uscire): ");
+                    int IdDaEliminare = 0;
+                    scanf("%d", &IdDaEliminare);
+                    if (IdDaEliminare == -1) break;
+
+                    if (eliminaPrenot(&listaPrenotazioni, IdDaEliminare)) {
+                        printf("Elemento eliminato con successo!\n");
+                    } else {
+                        printf("ID non trovato!\n");
+                    }
+                }
+                break;
+                case 6: {
+
+                    if (stampaStorico("storico.txt") == 1) {
+                        printf("\nStampa effettuata con successo!.");
+                    } else
+                        printf("\nNon e' stato possibile stampare.");
+                break;
+                }
             }
             case 0:
                 printf("Uscita...\n");
@@ -135,6 +173,7 @@ int main() {
     listaPrenotazioni = freeList(listaPrenotazioni);
 
     for(int i=0; i<numVeicoli; i++) liberaVeicolo(listaVeicoli[i]);
+
     free(listaVeicoli);
 
     return 0;
