@@ -3,20 +3,20 @@
 
 typedef struct veicolo* Veicolo;
 
-Veicolo creaVeicolo(char*, char*);
-
+Veicolo creaVeicolo(char*, char*, char*);
 
 Veicolo leggiVeicoloDaRiga(char* riga);
-Veicolo* caricaVeicoliDaFile(const char* nomeFile, int* numVeicoli);
-
+Veicolo* caricaVeicoliDaFile(FILE* , int* numVeicoli);
 
 void stampaVeicoli(int , Veicolo* );
 void stampaValidita(Veicolo );
 
 bool getData(Veicolo , int);
 void setData(Veicolo , int, bool);
+
 char* getTarga(Veicolo );
 char* getModello(Veicolo );
+char* getPosizione(Veicolo);
 
 void liberaVeicolo(Veicolo );
 

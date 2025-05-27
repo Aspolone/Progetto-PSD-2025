@@ -5,27 +5,19 @@
 #include "list.h"
 #include "Utente.h"
 #include "Veicolo.h"
-
-#define MAX_VEICOLI 50
-#define TARIFFA 8.0f
-
+#include "macro_utili.h"
 
 int main() {
     int numVeicoli;
 
-    printf("Apro il file: veicoli.txt\n");
-    FILE* f = fopen("veicoli.txt", "r");
-    if (f == NULL) {
+    printf("Apro il file: veicoli.txt\n"); //apre il file veicoli
+    FILE* f = fopen("veicoli.txt", "r"); //crea puntatore a file veicoli
+    if (f == NULL) { //controllo di corretta apertura del FILE
         perror("Errore apertura file veicoli.txt");
         exit(1);
     }
 
-    Veicolo* listaVeicoli = caricaVeicoliDaFile("veicoli.txt", &numVeicoli);
-
-    if(numVeicoli == 0) {
-        printf("Nessun veicolo caricato.\n");
-        return 1;
-    }
+    Veicolo* listaVeicoli = caricaVeicoliDaFile(f ,&numVeicoli); //associa ad un vettore i veicoli letti all'interno del file
 
     Utente utente = NULL;
     list listaPrenotazioni = newList();
@@ -37,7 +29,7 @@ int main() {
     }
 
     int scelta;
-    do { // ciclo while per poter far ripetere le prenotazioni
+    do { // ciclo while per poter far ripetere la selezione
 
         printf("\n--- MENU ---\n");
         printf("1) Crea utente\n");
@@ -82,7 +74,7 @@ int main() {
                 printf("\n[=== TARIFFA FISSA DI: %.2f$/h ===]\n", TARIFFA);
                 printf("Veicoli disponibili:\n");
                 for(int i=0; i<numVeicoli; i++) {
-                    printf("%d) %s - %s\n", i+1, getTarga(listaVeicoli[i]), getModello(listaVeicoli[i]));
+                    printf("%d) %s - %s - %s\n", i+1, getTarga(listaVeicoli[i]), getModello(listaVeicoli[i]), getPosizione(listaVeicoli[i]));
                 }
                 int sceltaVeicolo;
                 printf("Scegli veicolo (numero): "); //scelta in base ai veicoli dentro il file
@@ -95,8 +87,8 @@ int main() {
                 printf("\n[=== Prezzo ridotto del 10%% dalle 22 alle 06 ===]\n", TARIFFA);
                 printf("Inserisci ora inizio e fine (0-23): ");
                 scanf("%d %d", &inizio, &fine);
-                if(inizio < 0 || fine > 24) {
-                    printf("Orari non validi.\n");
+                if (inizio < 0 || inizio > 23 || fine < 0 || fine > 23 || inizio == fine) {
+                    printf("Orari non validi. Per selezionare una sola ora [h_inizio] - [h_inizio + 1] .\n");
                     break;
                 }
 

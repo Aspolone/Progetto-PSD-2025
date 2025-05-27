@@ -13,9 +13,10 @@ int isEmptyList(list );
 list tailList(list );
 list consList(Prenotazione , list );
 Prenotazione getFirst(list );
+
 void stampaLista(list l);
 bool stampaListaSecondoUtente(list , char*);
-list freeList(list l);
 bool eliminaPrenot(list* , int);
+list freeList(list l);
 
 #endif // LIST_H

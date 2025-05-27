@@ -7,7 +7,6 @@
 
 typedef struct prenotazione* Prenotazione;
 
-
 #include "utente.h"
 #include "veicolo.h"
 

@@ -2,6 +2,7 @@
 #include "Prenotazione.h"
 #include <stdlib.h>
 #include <string.h>
+#include "macro_utili.h"
 
 struct utente {
     char codiceFiscale[16 + 1];
@@ -68,13 +69,15 @@ Prenotazione getPrenot(Utente utente, int nPrenot) {
     return utente->prenotazioni[nPrenot];
 }
 
-void setPrenot(Utente utente, int nPrenot, Prenotazione p) {
-    utente->prenotazioni[nPrenot] = p;
-}
 
-void aggPrenot(Utente utente, Prenotazione p) {
+int aggPrenot(Utente utente, Prenotazione p) {
+    if (utente->nPrenotazioni >= MAX_PRENOTAZIONI) {
+        printf("Errore: limite prenotazioni superato.\n");
+        return NULL;
+    }
     utente->prenotazioni[utente->nPrenotazioni] = p;
     utente->nPrenotazioni++;
+    return 1;
 }
 
 void liberaUtente(Utente utente) {

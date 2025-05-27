@@ -54,9 +54,10 @@ void stampaLista(list l) {
   list temp = l;
   while (!isEmptyList(temp)) {
     Prenotazione p = getFirst(temp);
-    printf("\nUtente: %s, Veicolo: %s, Orario: %2d %2d, Prezzo: %.2f\n",
+    printf("\nUtente: %s, Veicolo: %s, Posizione: %s, Orario: %d-%d, Prezzo: %.2f\n",
            getNome(getUtente(p)),
            getTarga(getVeicolo(p)),
+           getPosizione(getVeicolo(p)),
            getInizio(p),
            getFine(p),
            getCosto(p));
@@ -75,10 +76,11 @@ bool stampaListaSecondoUtente(list l, char* nome) {
 
     if (strcmp(getNome(getUtente(p)), nome) == 0) {
       trovato = true;
-      printf("\n%d) ID: %d, Veicolo: %s, Orario: %d %d, Prezzo: %.2f\n",
+      printf("\n%d) ID: %d, Veicolo: %s, Posizione: %s, Orario: %d-%d, Prezzo: %.2f\n",
              i,
              getID(p),
              getTarga(getVeicolo(p)),
+             getPosizione(getVeicolo(p)),
              getInizio(p),
              getFine(p),
              getCosto(p));

@@ -3,20 +3,18 @@
 #include <string.h>
 #include <stdbool.h>
 #include "Veicolo.h"
+#include "macro_utili.h"
 
 // Struttura Veicolo
 //aggiungi char* posizione;
 struct veicolo {
-    char targa[7];
+    char targa[7 + 1];
     char* modello;
+    char* posizione;
     bool data[24];  // Disponibilità su 24 ore
 };
 
-#define MODELLO_MAX_NOME 50
-#define BUFFER 155
-#define MAX_VEICOLI 50
-
-Veicolo creaVeicolo(char* targa, char* modello) {
+Veicolo creaVeicolo(char* targa, char* modello, char* posizione) {
 
     Veicolo nuovoVeicolo = malloc(sizeof(struct veicolo));
     if (nuovoVeicolo == NULL) {
@@ -25,7 +23,7 @@ Veicolo creaVeicolo(char* targa, char* modello) {
     }
 
     if (strlen(targa) != 7) {
-        printf("Errore caratteri targa.\n");
+        printf("Errore caratteri targa. Nr elem %llu\n", strlen(targa));
         exit(1);
     }
     strcpy(nuovoVeicolo->targa, targa);
@@ -42,6 +40,13 @@ Veicolo creaVeicolo(char* targa, char* modello) {
     }
     strcpy(nuovoVeicolo->modello, modello);
 
+    nuovoVeicolo->posizione = malloc(strlen(posizione) + 1);
+    if (nuovoVeicolo->posizione == NULL) {
+        printf("Errore allocazione posizione.\n");
+        exit(1);
+    }
+    strcpy(nuovoVeicolo->posizione, posizione);
+
     // Inizializza vettore data a false
     for (int i = 0; i < 24; i++)
         nuovoVeicolo->data[i] = false;
@@ -57,14 +62,15 @@ void stampaValidita(Veicolo veicolo) {
 
 Veicolo leggiVeicoloDaRiga(char* riga) {
     char* targa = strtok(riga, ";");
-    char* modello = strtok(NULL, ";\n");
+    char* modello = strtok(NULL, ";");
+    char* posizione = strtok(NULL, ";\n");
 
-    if (targa == NULL || modello == NULL) {
+    if (targa == NULL || modello == NULL || posizione == NULL) {
         printf("Errore formato riga veicolo.\n");
         return NULL;
     }
 
-    return creaVeicolo(targa, modello);
+    return creaVeicolo(targa, modello, posizione);
 }
 
 void stampaVeicoli(int numVeicoli, Veicolo* listaVeicoli) {
@@ -78,14 +84,9 @@ void stampaVeicoli(int numVeicoli, Veicolo* listaVeicoli) {
 }
 
 
-Veicolo* caricaVeicoliDaFile(const char* nomeFile, int* numVeicoli) {
-    FILE* file = fopen(nomeFile, "r");
-    if (!file) {
-        printf("Errore apertura file veicoli.\n");
-        exit(1);
-    }
+Veicolo* caricaVeicoliDaFile(FILE* file, int* numVeicoli) {
 
-    Veicolo* veicoli = malloc(sizeof(struct veicolo*) * MAX_VEICOLI);
+    Veicolo* veicoli = malloc(sizeof(Veicolo) * MAX_VEICOLI);
     if (!veicoli) {
         printf("Errore allocazione memoria veicoli.\n");
         exit(1);
@@ -93,6 +94,14 @@ Veicolo* caricaVeicoliDaFile(const char* nomeFile, int* numVeicoli) {
 
     char riga[BUFFER];
     *numVeicoli = 0;
+
+    int c = fgetc(file);
+    if (c == EOF) {
+        printf("Il file e' vuoto.\n");
+        fclose(file);
+        exit(1);
+    }
+    rewind(file);
 
     while (fgets(riga, sizeof(riga), file)) {
         if (*numVeicoli >= MAX_VEICOLI) {
@@ -122,11 +131,16 @@ char* getModello(Veicolo veicolo) {
     return veicolo->modello;
 }
 
+char* getPosizione(Veicolo veicolo) {
+    return veicolo->posizione;
+}
+
 char* getTarga(Veicolo veicolo) {
     return veicolo->targa;
 }
 
 void liberaVeicolo(Veicolo veicolo) {
     free(veicolo->modello);
+    free(veicolo->posizione);
     free(veicolo);
 }

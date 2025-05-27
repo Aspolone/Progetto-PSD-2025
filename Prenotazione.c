@@ -1,11 +1,7 @@
 #include "Prenotazione.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-
-
-#define TARIFFA 8.0f
-#define NUM_PRENOT_SCONTO 3
+#include "macro_utili.h"
 
 int prossimoId = 0;
 
@@ -21,7 +17,7 @@ struct prenotazione {
 //riempe semplicemente la struct prenot, va aggiunta alla lista con conslist
 Prenotazione creaPrenotazione(Utente u, Veicolo v, int i_data, int f_data) {
 
-    Prenotazione nuovaPrenotazione = malloc (sizeof(struct prenotazione));
+    Prenotazione nuovaPrenotazione = malloc(sizeof(struct prenotazione));
     if (!nuovaPrenotazione) {
         printf("Errore allocazione prenotazione.\n");
         return NULL;
@@ -29,28 +25,21 @@ Prenotazione creaPrenotazione(Utente u, Veicolo v, int i_data, int f_data) {
 
     nuovaPrenotazione->utente = u;
     nuovaPrenotazione->veicolo = v;
-
-    if ((getNPrenot(u)) == MAX_PRENOTAZIONI) { //controlla il numero di prenotazioni dell'utente prima di continuare
-        printf("Numero di prenotazioni massime raggiunto."); //se raggiunge il max non continua
-        exit(1);
-    }
-
     nuovaPrenotazione->inizio_data = i_data;
     nuovaPrenotazione->fine_data = f_data;
 
     if (!checkValidita(nuovaPrenotazione)) {
-        printf("Errore di prenotazione, orario occupato.");
+        printf("Errore di prenotazione, orario occupato.\n");
         free(nuovaPrenotazione);
         return NULL;
-    } else {
-        impostaValidita(nuovaPrenotazione, true);
     }
 
-    nuovaPrenotazione->id_prenotazione = prossimoId;
-    prossimoId += 1;
+    impostaValidita(nuovaPrenotazione, true);
 
+    nuovaPrenotazione->id_prenotazione = prossimoId++;
     nuovaPrenotazione->costo = calcolaCosto(nuovaPrenotazione);
-    aggPrenot(u,nuovaPrenotazione);
+
+    aggPrenot(u, nuovaPrenotazione);
 
     return nuovaPrenotazione;
 }
@@ -87,7 +76,7 @@ float calcolaCosto (Prenotazione prenot) {
 void controllaSconto(Prenotazione prenot) {
     int numPrenot = getNPrenot(prenot->utente);
     if (numPrenot > 0 && numPrenot < 3)
-        printf("\n[=== Mancano ancora %d prenotazioni, per uno sconto! ===]\n", (NUM_PRENOT_SCONTO - numPrenot) );
+        printf("\n[=== Mancano ancora %d prenotazioni, per uno sconto! ===]\n", (NUM_PRENOT_SCONTO - numPrenot));
     if (numPrenot >= NUM_PRENOT_SCONTO)
         printf("\n[=== Complimenti! sconto del 10%% ottenuto! ===]");
 }
@@ -95,10 +84,10 @@ void controllaSconto(Prenotazione prenot) {
 float applicaSconto(Prenotazione prenot, float costo) {
 
     if (prenot->inizio_data >= 22 || prenot->fine_data <= 6)
-        costo = costo * 0.90f;
+        costo *= 0.90f;
 
     if (getNPrenot(prenot->utente) > NUM_PRENOT_SCONTO)
-        costo = costo * 0.90f;
+        costo *= 0.90f;
 
     return costo;
 }
@@ -133,9 +122,10 @@ int stampaStorico(char* fileName) {
         fclose(fp);
         return 0;
     }
+
     ungetc(c, fp); // rimetti il carattere per non saltare niente
 
-    char line[256];
+    char line[BUFFER];
     while (fgets(line, sizeof(line), fp) != NULL) {
         printf("%s", line); // stampa la riga così com'è
     }
