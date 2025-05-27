@@ -1,22 +1,22 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include "prenotazione.h"
+#include "Prenotazione.h"
 
 #define NULLITEM 0
 
 typedef struct node* list;
 
 //prototipi
-list newList(void);
+list nuovaLista(void);
 int isEmptyList(list );
-list tailList(list );
-list consList(Prenotazione , list );
-Prenotazione getFirst(list );
+list codaLista(list );
+list aggLista(Prenotazione , list );
+Prenotazione prendiPrimo(list );
 
 void stampaLista(list l);
 bool stampaListaSecondoUtente(list , char*);
 bool eliminaPrenot(list* , int);
-list freeList(list l);
+list liberaLista(list l);
 
 #endif // LIST_H

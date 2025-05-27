@@ -47,14 +47,14 @@ Prenotazione creaPrenotazione(Utente u, Veicolo v, int i_data, int f_data) {
 void impostaValidita(Prenotazione p, bool x) {
     int ora = ((p->fine_data - p->inizio_data) % 24 + 24) %24;
 
-    for (int i = 0; i < ora; i++)
+    for (int i = 0; i <= ora; i++)
         setData(p->veicolo, (p->inizio_data + i) % 24, x);
 }
 
 bool checkValidita(Prenotazione prenot) {
     int ora = ((prenot->fine_data - prenot->inizio_data) % 24 + 24) %24;
 
-    for (int i = 0; i < ora; i++) { //per non scorrere tutto il vettore controlla dalla data inizio, fino a data fine
+    for (int i = 0; i <= ora; i++) { //per non scorrere tutto il vettore controlla dalla data inizio, fino a data fine
         if (getData(prenot->veicolo, (prenot->inizio_data + i) % 24)) { //aggiunta del modulo per assicurare la ciclicita'
             return false; // già occupato
         }
