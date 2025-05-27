@@ -1,0 +1,13 @@
+#ifndef MACRO_UTILI_H
+#define MACRO_UTILI_H
+
+#define MODELLO_MAX_NOME 50
+#define BUFFER 155
+#define TARIFFA 8.0f
+#define NUM_PRENOT_SCONTO 3
+#define MAX_VEICOLI 50
+#define UTENTE_MAX_NOME 50
+#define CF_MAX 17
+#define MAX_PRENOTAZIONI 10
+
+#endif //MACRO_UTILI_H
