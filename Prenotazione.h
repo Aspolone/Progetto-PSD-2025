@@ -7,8 +7,8 @@
 
 typedef struct prenotazione* Prenotazione;
 
-#include "utente.h"
-#include "veicolo.h"
+#include "Utente.h"
+#include "Veicolo.h"
 
 // Prototipi delle funzioni
 Prenotazione creaPrenotazione(Utente, Veicolo, int, int);

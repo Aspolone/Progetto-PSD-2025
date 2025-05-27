@@ -9,7 +9,7 @@ struct node {
   struct node *next;
 };
 
-list newList(void){
+list nuovaLista(void){
   return NULL;
 }
 
@@ -18,7 +18,7 @@ int isEmptyList(list l){
   }
 
 
-list consList(Prenotazione prenot, list l) {
+list aggLista(Prenotazione prenot, list l) {
 
   struct node *nuova_prenotazione = malloc(sizeof(struct node));
 
@@ -31,7 +31,7 @@ list consList(Prenotazione prenot, list l) {
   return l;
 }
 
-list tailList(list l) {
+list codaLista(list l) {
   list temp;
   if (l != NULL)
     temp = l->next;
@@ -41,7 +41,7 @@ list tailList(list l) {
 }
 
 //non avendo messo in dichiarazione di struct *, adesso andra' messo un po' ovunque
-Prenotazione getFirst(list l) {
+Prenotazione prendiPrimo(list l) {
   Prenotazione e;
   if (l != NULL)
     e = l->prenotazione;
@@ -53,7 +53,7 @@ Prenotazione getFirst(list l) {
 void stampaLista(list l) {
   list temp = l;
   while (!isEmptyList(temp)) {
-    Prenotazione p = getFirst(temp);
+    Prenotazione p = prendiPrimo(temp);
     printf("\nUtente: %s, Veicolo: %s, Posizione: %s, Orario: %d-%d, Prezzo: %.2f\n",
            getNome(getUtente(p)),
            getTarga(getVeicolo(p)),
@@ -62,7 +62,7 @@ void stampaLista(list l) {
            getFine(p),
            getCosto(p));
 
-    temp = tailList(temp);
+    temp = codaLista(temp);
   }
 }
 
@@ -72,7 +72,7 @@ bool stampaListaSecondoUtente(list l, char* nome) {
   int i = 1;
 
   while (temp != NULL) {
-    Prenotazione p = getFirst(temp);
+    Prenotazione p = prendiPrimo(temp);
 
     if (strcmp(getNome(getUtente(p)), nome) == 0) {
       trovato = true;
@@ -87,7 +87,7 @@ bool stampaListaSecondoUtente(list l, char* nome) {
       i++;
     }
 
-    temp = tailList(temp);
+    temp = codaLista(temp);
   }
 
   return trovato;
@@ -101,11 +101,11 @@ bool eliminaPrenot(list *l, int ID) {
     if (getID(temp->prenotazione) == ID) {// controlla se l'ID e lo stesso di quello inserito
       //quello trovato sara quello che verra eliminato
 
-      if (nodoPrec != NULL) {// se il nodo precedente NON e vuoto, non stiamo eliminando il primo elemnto
+      if (nodoPrec != NULL) {// se il nodo precedente NON e vuoto, non stiamo eliminando il primo elemento
         // quindi nodo deve saltare al next di temp, puntando al prossimo
         nodoPrec->next = temp->next;//
       } else {
-        // se nodoPrec = NULL, allora stiamo eliminando il primo elemnto, quindi l (la cima della lista) dovrá solamente saltare oltre temp
+        // se nodoPrec = NULL, allora stiamo eliminando il primo elemento, quindi l (la cima della lista) dovrá solamente saltare oltre temp
         *l = temp->next;
       }
 
@@ -114,20 +114,20 @@ bool eliminaPrenot(list *l, int ID) {
       return true;
     }
 
-    nodoPrec = temp;// se non ha ancora torvato il nodo da eliminare, inizia a scorrere la lista
+    nodoPrec = temp;// se non ha ancora trovato il nodo da eliminare, inizia a scorrere la lista
     temp = temp->next;// scorrendo nodoPrec e temp in avanti
   }
 
   return false; // Non trovato
 }
 
-list freeList(list l) {
+list liberaLista(list l) {
   while (!isEmptyList(l)) {
-    Prenotazione p = getFirst(l);
+    Prenotazione p = prendiPrimo(l);
     liberaPrenotazione(p);
 
     list temp = l;
-    l = tailList(l);
+    l = codaLista(l);
     free(temp);
   }
   return NULL;

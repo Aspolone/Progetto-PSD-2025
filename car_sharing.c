@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "prenotazione.h"
+#include "Prenotazione.h"
 #include "list.h"
 #include "Utente.h"
 #include "Veicolo.h"
@@ -18,9 +18,13 @@ int main() {
     }
 
     Veicolo* listaVeicoli = caricaVeicoliDaFile(f ,&numVeicoli); //associa ad un vettore i veicoli letti all'interno del file
+    if (listaVeicoli == NULL) {
+        printf("Errore: nessun veicolo caricato!\n");
+        exit(1);
+    }
 
     Utente utente = NULL;
-    list listaPrenotazioni = newList();
+    list listaPrenotazioni = nuovaLista();
 
     FILE* fileStorico = fopen("storico.txt", "a");
     if(!fileStorico) {
@@ -41,7 +45,7 @@ int main() {
         printf("0) Esci\n");
         printf("Scelta: ");
 
-        int inputCheck = 0;
+        int inputCheck = 0;//metodo per fare in modo di accettare solo numeri come input.
         do{
             inputCheck = scanf("%d", &scelta); //perche la scanf ritorna il numero di valori assegnati ad una variabile
             getchar(); //pulisce l'input
@@ -85,19 +89,21 @@ int main() {
                 }
                 int inizio, fine;
                 printf("\n[=== Prezzo ridotto del 10%% dalle 22 alle 06 ===]\n", TARIFFA);
-                printf("Inserisci ora inizio e fine (0-23): ");
-                scanf("%d %d", &inizio, &fine);
+                printf("Inserisci ora inizio: ");
+                scanf("%d", &inizio);
+                printf("Inserisci ora fine: ");
+                scanf("%d", &fine);
                 if (inizio < 0 || inizio > 23 || fine < 0 || fine > 23 || inizio == fine) {
                     printf("Orari non validi. Per selezionare una sola ora [h_inizio] - [h_inizio + 1] .\n");
                     break;
                 }
 
-                Prenotazione p = creaPrenotazione(utente, listaVeicoli[sceltaVeicolo - 1], inizio, fine);
+                Prenotazione p = creaPrenotazione(utente, listaVeicoli[sceltaVeicolo - 1], inizio, fine); //scelta veicolo -1 perché ci sta un offset da vettore
                 if (p == NULL) {
                     printf("Prenotazione fallita, riprova con orari diversi.\n");
                     break;
                 } else {
-                listaPrenotazioni = consList(p, listaPrenotazioni);
+                listaPrenotazioni = aggLista(p, listaPrenotazioni);
                 aggiungiStorico(fileStorico, p);
                 printf("Prenotazione effettuata.\n");
                 controllaSconto(p);
@@ -162,11 +168,14 @@ int main() {
     // Libera memoria
     if(utente) liberaUtente(utente);
 
-    listaPrenotazioni = freeList(listaPrenotazioni);
+    listaPrenotazioni = liberaLista(listaPrenotazioni);
 
-    for(int i=0; i<numVeicoli; i++) liberaVeicolo(listaVeicoli[i]);
-
-    free(listaVeicoli);
+    if (listaVeicoli != NULL) {//controlla se listaveicoli non é giá vuota per evitare crash e dump
+        for(int i = 0; i < numVeicoli; i++) {
+            if (listaVeicoli[i] != NULL) liberaVeicolo(listaVeicoli[i]);
+        }
+        free(listaVeicoli);
+    }
 
     return 0;
 }
