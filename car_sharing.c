@@ -53,7 +53,7 @@ int main() {
 
         switch(scelta) {
             case 1: {
-                if(utente) liberaUtente(utente); // se utente gia esiste (il while ha effettuato piu di un giro di ciclo, lo pulisce e va avanti
+                if(utente) liberaUtente(utente); // se utente gia esiste (il while ha effettuato piu di un giro di ciclo, lo pulisce e va avanti)
                 char nome[UTENTE_MAX_NOME];
                 char cf[CF_MAX];
                 printf("Inserisci nome: ");
@@ -130,7 +130,7 @@ int main() {
                 if (isEmptyList(listaPrenotazioni)) {
                     printf("Nessuna prenotazione.\n");
                 } else {
-                    if (!stampaListaSecondoUtente(listaPrenotazioni, getNome(utente))) {
+                    if (!stampaListaSecondoUtente(listaPrenotazioni, getCF(utente))) {
                         printf("Nessuna prenotazione per questo utente.\n");
                         break;
                     }
@@ -166,7 +166,7 @@ int main() {
     fclose(fileStorico);
 
     // Libera memoria
-    if(utente) liberaUtente(utente);
+    if (utente) liberaUtente(utente);
 
     listaPrenotazioni = liberaLista(listaPrenotazioni);
 

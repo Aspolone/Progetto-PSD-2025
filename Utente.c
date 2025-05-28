@@ -53,10 +53,6 @@ int getNPrenot (Utente utente) {
     return utente->nPrenotazioni;
 }
 
-void setNPrenot (Utente utente, int n) {
-    utente->prenotazioni += n;
-}
-
 char* getNome(Utente utente) {
     return utente->nome;
 }
@@ -84,11 +80,6 @@ void liberaUtente(Utente utente) {
     if (utente == NULL) return;
 
     free(utente->nome);
-
-    for (int i = 0; i < utente->nPrenotazioni; i++) {
-        if (utente->prenotazioni[i] != NULL)
-            free(utente->prenotazioni[i]);
-    }
 
     free(utente->prenotazioni);
     free(utente);

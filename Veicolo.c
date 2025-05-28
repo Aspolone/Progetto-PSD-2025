@@ -144,3 +144,9 @@ void liberaVeicolo(Veicolo veicolo) {
     free(veicolo->posizione);
     free(veicolo);
 }
+
+void liberaVeicoli(Veicolo* lista, int n) {
+    for (int i = 0; i < n; i++)
+        liberaVeicolo(lista[i]);
+    free(lista);
+}
