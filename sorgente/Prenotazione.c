@@ -65,9 +65,7 @@ bool checkValidita(Prenotazione prenot) {
 
 float calcolaCosto (Prenotazione prenot) {
     int ora = ((prenot->fine_data - prenot->inizio_data) % 24 + 24) %24;
-
     float costo = (float)(ora) * TARIFFA;
-
     costo = applicaSconto(prenot, costo);
 
     return costo;
