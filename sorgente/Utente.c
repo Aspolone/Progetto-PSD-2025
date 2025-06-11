@@ -1,8 +1,8 @@
-#include "Utente.h"
-#include "Prenotazione.h"
+#include "include/Utente.h"
+#include "include/Prenotazione.h"
 #include <stdlib.h>
 #include <string.h>
-#include "macro_utili.h"
+#include "include/macro_utili.h"
 
 struct utente {
     char codiceFiscale[16 + 1];
@@ -19,7 +19,7 @@ Utente creaUtente(char* nome, char* CF) {
         exit(1);
     }
     if (strlen(CF)!=16) {
-        printf("Errore codice fiscale, %lu caratteri. Riprova.\n", strlen(CF));
+        //printf("Errore codice fiscale, %lu caratteri. Riprova.\n", strlen(CF)); //TODO cambiare questa cosa stampare nel main
         return NULL;
     }
     else strcpy(nuovoUtente->codiceFiscale, CF);
@@ -53,10 +53,6 @@ int getNPrenot (Utente utente) {
     return utente->nPrenotazioni;
 }
 
-void setNPrenot (Utente utente, int n) {
-    utente->prenotazioni += n;
-}
-
 char* getNome(Utente utente) {
     return utente->nome;
 }
@@ -73,7 +69,7 @@ Prenotazione getPrenot(Utente utente, int nPrenot) {
 int aggPrenot(Utente utente, Prenotazione p) {
     if (utente->nPrenotazioni >= MAX_PRENOTAZIONI) {
         printf("Errore: limite prenotazioni superato.\n");
-        return NULL;
+        return -1;
     }
     utente->prenotazioni[utente->nPrenotazioni] = p;
     utente->nPrenotazioni++;
@@ -84,11 +80,6 @@ void liberaUtente(Utente utente) {
     if (utente == NULL) return;
 
     free(utente->nome);
-
-    for (int i = 0; i < utente->nPrenotazioni; i++) {
-        if (utente->prenotazioni[i] != NULL)
-            free(utente->prenotazioni[i]);
-    }
 
     free(utente->prenotazioni);
     free(utente);

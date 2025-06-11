@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "Veicolo.h"
-#include "macro_utili.h"
+#include "../include/Veicolo.h"
+#include "../include/macro_utili.h"
 
 // Struttura Veicolo
 //aggiungi char* posizione;
@@ -23,8 +23,8 @@ Veicolo creaVeicolo(char* targa, char* modello, char* posizione) {
     }
 
     if (strlen(targa) != 7) {
-        printf("Errore caratteri targa. Nr elem %llu\n", strlen(targa));
-        exit(1);
+        //printf("Errore caratteri targa. Nr elem %llu\n", strlen(targa)); TODO stampare nel main e cambiare nel main controllo
+        return NULL;
     }
     strcpy(nuovoVeicolo->targa, targa);
 
@@ -143,4 +143,10 @@ void liberaVeicolo(Veicolo veicolo) {
     free(veicolo->modello);
     free(veicolo->posizione);
     free(veicolo);
+}
+
+void liberaVeicoli(Veicolo* lista, int n) {
+    for (int i = 0; i < n; i++)
+        liberaVeicolo(lista[i]);
+    free(lista);
 }

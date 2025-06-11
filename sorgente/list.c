@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "list.h"
+#include "../include/list.h"
 
 #include <string.h>
 
@@ -66,7 +66,7 @@ void stampaLista(list l) {
   }
 }
 
-bool stampaListaSecondoUtente(list l, char* nome) {
+bool stampaListaSecondoUtente(list l, char* CF) {
   list temp = l;
   bool trovato = false;
   int i = 1;
@@ -74,7 +74,7 @@ bool stampaListaSecondoUtente(list l, char* nome) {
   while (temp != NULL) {
     Prenotazione p = prendiPrimo(temp);
 
-    if (strcmp(getNome(getUtente(p)), nome) == 0) {
+    if (strcmp(getCF(getUtente(p)), CF) == 0) {
       trovato = true;
       printf("\n%d) ID: %d, Veicolo: %s, Posizione: %s, Orario: %d-%d, Prezzo: %.2f\n",
              i,
