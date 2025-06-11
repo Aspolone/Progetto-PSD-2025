@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "file_utils.h"
+#include "../include/file_utils.h"
 
 void finput_array(char *file_name, int a[], int n){
     int i;

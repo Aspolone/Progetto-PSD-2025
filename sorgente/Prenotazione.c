@@ -1,7 +1,7 @@
-#include "Prenotazione.h"
+#include "../include/Prenotazione.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "macro_utili.h"
+#include "../include/macro_utili.h"
 
 int prossimoId = 0;
 
@@ -29,9 +29,9 @@ Prenotazione creaPrenotazione(Utente u, Veicolo v, int i_data, int f_data) {
     nuovaPrenotazione->fine_data = f_data;
 
     if (!checkValidita(nuovaPrenotazione)) {
-        printf("Errore di prenotazione, orario occupato.\n");
+        //printf("Errore di prenotazione, orario occupato.\n");
         free(nuovaPrenotazione);
-        return NULL;
+        return NULL; //TODO controllare nel main per stampare messaggio di errore
     }
 
     impostaValidita(nuovaPrenotazione, true);
@@ -110,7 +110,7 @@ void aggiungiStorico(FILE* file, Prenotazione prenotazione) {
 }
 
 int stampaStorico(char* fileName) {
-    FILE* fp = fopen(fileName, "r");
+    FILE* fp = fopen(fileName, "r"); //TODO controllare input corretto nel main, avendo aggiunto le cartelle
     if (!fp) {
         printf("Errore apertura file %s\n", fileName);
         return 0;

@@ -1,19 +1,19 @@
 car_sharing.exe: Prenotazione.o Utente.o list.o Veicolo.o car_sharing.o
 	gcc Prenotazione.o Utente.o list.o Veicolo.o car_sharing.o -o car_sharing.exe
 
-Prenotazione.o: Prenotazione.c Prenotazione.h macro_utili.h
+Prenotazione.o: sorgente/Prenotazione.c include/Prenotazione.h include/macro_utili.h
 	gcc -c Prenotazione.c
 
-Utente.o: Utente.c Utente.h macro_utili.h
+Utente.o: sorgente/Utente.c include/Utente.h include/macro_utili.h
 	gcc -c Utente.c
 
-list.o: list.c list.h macro_utili.h
+list.o: sorgente/list.c include/list.h include/macro_utili.h
 	gcc -c list.c
 
-Veicolo.o: Veicolo.c Veicolo.h macro_utili.h
+Veicolo.o: sorgente/Veicolo.c include/Veicolo.h include/macro_utili.h
 	gcc -c Veicolo.c
 
-car_sharing.o: car_sharing.c Prenotazione.h Utente.h list.h Veicolo.h macro_utili.h
+car_sharing.o: car_sharing.c include/Prenotazione.h include/Utente.h include/list.h include/Veicolo.h include/macro_utili.h
 	gcc -c car_sharing.c
 
 clean:
