@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "include/prenotazione.h"
-#include "include/list.h"
-#include "include/Utente.h"
-#include "include/Veicolo.h"
-#include "include/macro_utili.h"
+#include "../include/prenotazione.h"
+#include "../include/list.h"
+#include "../include/Utente.h"
+#include "../include/Veicolo.h"
+#include "../include/macro_utili.h"
 
 int main() {
     int numVeicoli;
