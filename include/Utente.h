@@ -2,6 +2,7 @@
 #define UTENTE_H
 
 typedef struct prenotazione* Prenotazione;
+
 typedef struct utente* Utente;
 
 

@@ -7,6 +7,7 @@
 
 typedef struct node* list;
 
+
 /*
     Funzione per creare una nuova lista vuota
 

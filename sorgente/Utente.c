@@ -11,6 +11,7 @@ struct utente {
     Prenotazione* prenotazioni;  // Array di puntatori a prenotazioni
 };
 
+
 /*
     Funzione per la creazione e inizializzazione di un utente
 

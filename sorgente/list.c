@@ -9,6 +9,7 @@ struct node {
   struct node *next;
 };
 
+
 /*
     Funzione per creare una nuova lista vuota
 
