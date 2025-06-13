@@ -46,8 +46,6 @@ Utente creaUtente(char* nome, char* CF) {
     }
     else strcpy(nuovoUtente->codiceFiscale, CF);
 
-
-
     nuovoUtente->nome = malloc(strlen(nome) + 1);
     if (nuovoUtente->nome == NULL) {
         printf("Errore allocazione nome.\n");
