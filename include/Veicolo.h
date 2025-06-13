@@ -8,164 +8,194 @@
 typedef struct veicolo* Veicolo;
 
 /*
-Funzione che crea un nuovo veicolo
+    Funzione che crea un nuovo veicolo e alloca memoria per i suoi campi dinamici
 
-parametri:
-targa: stringa con la targa del veicolo
-modello: stringa con il modello del veicolo
-posizione: stringa con la posizione iniziale del veicolo
+    parametri:
+        targa: stringa valida di 7 caratteri
+        modello: stringa valida con lunghezza <= MODELLO_MAX_NOME
+        posizione: stringa valida indicante la posizione iniziale del veicolo
 
-precondizioni:
-- targa, modello e posizione devono essere stringhe non nulle
+    precondizioni:
+        i parametri devono essere stringhe valide e non NULL
 
-postcondizioni:
-- viene restituito un veicolo correttamente inizializzato con i dati forniti
+    postcondizioni:
+        viene restituito un veicolo con dati correttamente inizializzati, memoria allocata per modello e posizione, disponibilità inizializzata a false
 
-ritorna:
-puntatore al nuovo veicolo, NULL in caso di errore
+    ritorna:
+        un puntatore a struct veicolo correttamente allocata e inizializzata
 */
 Veicolo creaVeicolo(char*, char*, char*);
 
 /*
-Funzione che crea un veicolo a partire da una riga di testo (es. CSV)
+    Funzione che legge una riga formattata e crea un veicolo
 
-parametri:
-riga: stringa contenente i dati del veicolo formattati correttamente
+    parametri:
+        riga: stringa in formato "targa;modello;posizione"
 
-precondizioni:
-- riga deve essere una stringa valida, non nulla e ben formattata
+    precondizioni:
+        riga è una stringa valida e contiene almeno due separatori ';'
 
-postcondizioni:
-- viene restituito un veicolo con i dati estratti dalla riga
+    postcondizioni:
+        viene creato un veicolo con i dati letti dalla riga
 
-ritorna:
-puntatore al veicolo, NULL in caso di errore
+    ritorna:
+        veicolo creato se i dati sono corretti
+        NULL se il formato è errato
 */
 Veicolo leggiVeicoloDaRiga(char* riga);
 
 /*
-Funzione che carica un array di veicoli da file
+    Funzione che carica i veicoli da un file di testo
 
-parametri:
-file: file aperto in lettura contenente i dati dei veicoli
-numVeicoli: puntatore a intero dove salvare il numero di veicoli letti
+    parametri:
+        file: puntatore a FILE aperto in lettura
+        numVeicoli: puntatore a intero dove verrà salvato il numero di veicoli letti
 
-precondizioni:
-- file deve essere valido e aperto
-- numVeicoli deve essere un puntatore valido
+    precondizioni:
+        file deve essere aperto correttamente, numVeicoli deve essere valido
 
-postcondizioni:
-- i veicoli vengono letti dal file e salvati in un array
-- numVeicoli viene aggiornato con il numero di elementi
+    postcondizioni:
+        alloca un array di veicoli e aggiorna numVeicoli con il numero di veicoli caricati
 
-ritorna:
-array di veicoli caricati, NULL in caso di errore
+    ritorna:
+        array di puntatori a veicoli
 */
 Veicolo* caricaVeicoliDaFile(FILE*, int* numVeicoli);
 
 /*
-Funzione che stampa a video un array di veicoli
+    Funzione che stampa una lista di veicoli
 
-parametri:
-n: numero di veicoli
-veicoli: array di puntatori a veicoli
+    parametri:
+        numVeicoli: numero di veicoli nella lista
+        listaVeicoli: array di puntatori a veicoli
 
-precondizioni:
-- veicoli deve contenere almeno n elementi validi
+    precondizioni:
+        numVeicoli >= 0, listaVeicoli contiene veicoli validi
 
-postcondizioni:
-- vengono stampate le informazioni di ogni veicolo su console
+    postcondizioni:
+        stampa a schermo i dati di ciascun veicolo nella lista
 */
 void stampaVeicoli(int, Veicolo*);
 
 /*
-Funzione che stampa la validità (disponibilità oraria) di un veicolo
+    Funzione che stampa la disponibilità oraria di un veicolo
 
-parametri:
-v: puntatore a veicolo valido
+    parametri:
+        veicolo: puntatore a veicolo valido
 
-precondizioni:
-- v deve essere un puntatore valido a un veicolo inizializzato
+    precondizioni:
+        veicolo deve essere valido e non NULL
 
-postcondizioni:
-- viene stampata la disponibilità oraria del veicolo
+    postcondizioni:
+        stampa su console la disponibilità del veicolo per ogni ora del giorno
 */
 void stampaValidita(Veicolo);
 
 /*
-Funzione che restituisce lo stato booleano associato a una specifica ora
+    Funzione che restituisce lo stato di disponibilità all'ora i
 
-parametri:
-v: puntatore a veicolo
-index: ora del giorno (0–23)
+    parametri:
+        veicolo: puntatore a un veicolo valido
+        i: intero che rappresenta l'ora
 
-precondizioni:
-- v deve essere valido
-- index deve essere compreso tra 0 e 23
+    precondizioni:
+        veicolo != NULL
 
-ritorna:
-true se il veicolo è occupato in quell’ora, false altrimenti
+
+    postcondizioni:
+        restituisce true se il veicolo è disponibile nell'ora i
+        restituisce false se il veicolo è occupato nell'ora i o se i è fuori range
+
+    ritorna:
+        true se disponibile, false altrimenti
 */
 bool getData(Veicolo, int);
 
 /*
-Funzione che imposta lo stato booleano (occupato/libero) per una specifica ora
+    Funzione che imposta lo stato di disponibilità all'ora i
 
-parametri:
-v: puntatore a veicolo
-index: ora del giorno (0–23)
-value: true per occupato, false per libero
+    parametri:
+        veicolo: puntatore a un veicolo valido
+        i: ora (0-23)
+        b: valore booleano da assegnare (true = disponibile, false = occupato)
 
-precondizioni:
-- v deve essere valido
-- index deve essere compreso tra 0 e 23
+    precondizioni:
+        veicolo != NULL
 
-postcondizioni:
-- lo stato dell’ora indicata viene aggiornato con value
+    postcondizioni:
+        veicolo->disponibilita[i] viene impostato a b
+
+    ritorna:
+        nulla
 */
 void setData(Veicolo, int, bool);
 
 /*
-Getter della targa del veicolo
+    Funzione che restituisce la targa di un veicolo
 
-parametri:
-v: puntatore a veicolo valido
+    parametri:
+        veicolo: puntatore a un veicolo valido
 
-ritorna:
-stringa contenente la targa
+    precondizioni:
+        veicolo != NULL
+
+    postcondizioni:
+        nessuna modifica allo stato del veicolo
+
+    ritorna:
+        puntatore alla stringa contenente la targa del veicolo
 */
 char* getTarga(Veicolo);
 
 /*
-Getter del modello del veicolo
+    Funzione che restituisce il modello di un veicolo
 
-parametri:
-v: puntatore a veicolo valido
+    parametri:
+        veicolo: puntatore a un veicolo valido
 
-ritorna:
-stringa contenente il modello
+    precondizioni:
+        veicolo != NULL
+
+    postcondizioni:
+        nessuna modifica allo stato del veicolo
+
+    ritorna:
+        puntatore alla stringa contenente il modello del veicolo
 */
 char* getModello(Veicolo);
 
 /*
-Getter della posizione corrente del veicolo
+    Funzione che restituisce la posizione attuale del veicolo
 
-parametri:
-v: puntatore a veicolo valido
+    parametri:
+        veicolo: puntatore a un veicolo valido
 
-ritorna:
-stringa contenente la posizione
+    precondizioni:
+        veicolo != NULL
+
+    postcondizioni:
+        nessuna modifica allo stato del veicolo
+
+    ritorna:
+        puntatore alla stringa contenente la posizione attuale del veicolo
 */
 char* getPosizione(Veicolo);
 
 /*
-Funzione che libera la memoria occupata da un veicolo
+    Funzione che libera la memoria allocata per un veicolo
 
-parametri:
-v: puntatore al veicolo da liberare
+    parametri:
+        veicolo: puntatore a un veicolo valido
 
-postcondizioni:
-- la memoria occupata dal veicolo viene rilasciata
+    precondizioni:
+        veicolo != NULL
+        modello e posizione sono stati allocati dinamicamente (malloc, strdup, ecc.)
+
+    postcondizioni:
+        la memoria occupata da modello, posizione e dal veicolo stesso viene deallocata
+
+    ritorna:
+        nulla
 */
 void liberaVeicolo(Veicolo);
 
