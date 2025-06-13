@@ -1,26 +1,32 @@
-car_sharing.o: sorgente/car_sharing.c include/Prenotazione.h include/Utente.h include/list.h include/Veicolo.h include/macro_utili.h
-	gcc -c sorgente/car_sharing.c -Iinclude -o car_sharing.o
+CC = gcc
+CFLAGS = -Wall -Wextra -Iinclude
 
-test.exe: Prenotazione.o Utente.o list.o Veicolo.o test.o
-	gcc Prenotazione.o Utente.o list.o Veicolo.o test.o -o test.exe
+SRC_DIR = sorgente
+TEST_DIR = test
 
-Prenotazione.o: sorgente/Prenotazione.c include/Prenotazione.h include/macro_utili.h
-	gcc -c sorgente/Prenotazione.c -Iinclude
+SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
+OBJ_FILES = $(SRC_FILES:.c=.o)
 
-Utente.o: sorgente/Utente.c include/Utente.h include/macro_utili.h
-	gcc -c sorgente/Utente.c -Iinclude
+OBJ_FILES_NO_MAIN = $(filter-out $(SRC_DIR)/car_sharing.o, $(OBJ_FILES))
 
-list.o: sorgente/list.c include/list.h include/macro_utili.h
-	gcc -c sorgente/list.c -Iinclude
+TEST_SRC = $(TEST_DIR)/test.c
+TEST_OBJ = $(TEST_SRC:.c=.o)
 
-Veicolo.o: sorgente/Veicolo.c include/Veicolo.h include/macro_utili.h
-	gcc -c sorgente/Veicolo.c -Iinclude
+TARGET_MAIN = car_sharing
+TARGET_TEST = test_file
 
-car_sharing.o: car_sharing.c include/Prenotazione.h include/Utente.h include/list.h include/Veicolo.h include/macro_utili.h
-	gcc -c car_sharing.c -Iinclude
+.PHONY: all clean
 
-test.o: test/test.c include/Prenotazione.h include/Utente.h include/list.h include/Veicolo.h include/macro_utili.h
-	gcc -c test/test.c -Iinclude
+all: $(TARGET_MAIN)
+
+$(TARGET_MAIN): $(OBJ_FILES)
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(TARGET_TEST): $(OBJ_FILES_NO_MAIN) $(TEST_OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o car_sharing.exe test.exe
+	rm -f $(SRC_DIR)/*.o $(TEST_DIR)/*.o $(TARGET_MAIN) $(TARGET_TEST)

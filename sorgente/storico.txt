@@ -1,0 +1,10 @@
+
+CODICE FISCALE: angeloangelosole;
+TARGA VEICOLO : EH104JK;
+INIZIO ORA    : 10;
+FINE ORA      : 11.
+
+CODICE FISCALE: angeloangelosole;
+TARGA VEICOLO : EH104JK;
+INIZIO ORA    : 1;
+FINE ORA      : 11.

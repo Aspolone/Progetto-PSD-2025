@@ -1,8 +1,8 @@
-#include "include/Utente.h"
-#include "include/Prenotazione.h"
+#include "../include/Utente.h"
+#include "../include/Prenotazione.h"
 #include <stdlib.h>
 #include <string.h>
-#include "include/macro_utili.h"
+#include "../include/macro_utili.h"
 
 struct utente {
     char codiceFiscale[16 + 1];

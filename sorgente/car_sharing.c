@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "include/prenotazione.h"
-#include "include/list.h"
-#include "include/Utente.h"
-#include "include/Veicolo.h"
-#include "include/macro_utili.h"
+#include "../include/Prenotazione.h"
+#include "../include/list.h"
+#include "../include/Utente.h"
+#include "../include/Veicolo.h"
+#include "../include/macro_utili.h"
 
 int main() {
     int numVeicoli;
 
     printf("Apro il file: veicoli.txt\n"); //apre il file veicoli
-    FILE* f = fopen("veicoli.txt", "r"); //crea puntatore a file veicoli
+    FILE* f = fopen("sorgente/veicoli.txt", "r"); //crea puntatore a file veicoli
     if (f == NULL) { //controllo di corretta apertura del FILE
         perror("Errore apertura file veicoli.txt");
         exit(1);
@@ -26,7 +26,7 @@ int main() {
     Utente utente = NULL;
     list listaPrenotazioni = nuovaLista();
 
-    FILE* fileStorico = fopen("storico.txt", "a");
+    FILE* fileStorico = fopen("sorgente/storico.txt", "a");
     if(!fileStorico) {
         printf("Errore apertura file storico.\n");
         return 1;
@@ -88,7 +88,7 @@ int main() {
                     break;
                 }
                 int inizio, fine;
-                printf("\n[=== Prezzo ridotto del 10%% dalle 22 alle 06 ===]\n", TARIFFA);
+                printf("\n[=== Prezzo ridotto del 10%% tra le 22 e le 06 ===]\n");
                 printf("Inserisci ora inizio: ");
                 scanf("%d", &inizio);
                 printf("Inserisci ora fine: ");
@@ -134,7 +134,7 @@ int main() {
                         printf("Nessuna prenotazione per questo utente.\n");
                         break;
                     }
-                    printf("Inserisci ID prenotazione da voler eliminare (-1 per uscire): ");
+                    printf("\nInserisci ID prenotazione da voler eliminare (-1 per uscire): ");
                     int IdDaEliminare = 0;
                     scanf("%d", &IdDaEliminare);
                     if (IdDaEliminare == -1) break;
@@ -148,7 +148,7 @@ int main() {
                 break;
                 case 6: {
 
-                    if (stampaStorico("storico.txt") == 1) {
+                    if (stampaStorico("sorgente/storico.txt") == 1) {
                         printf("\nStampa effettuata con successo!.");
                     } else
                         printf("\nNon e' stato possibile stampare.");
